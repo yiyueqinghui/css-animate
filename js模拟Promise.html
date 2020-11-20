@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+	</body>
+	<script>
+		//模拟Promise
+		function promise() {
+			this.msg = '' // 存放value和error
+			this.status = 'pending'
+			var that = this
+			var process = arguments[0]
+
+			process(function() {
+				that.status = 'fulfilled'
+				that.msg = arguments[0]
+			}, function() {
+				that.status = 'rejected'
+				that.msg = arguments[0]
+			})
+			return this      //形成链式调用 
+		}
+
+		promise.prototype.then = function() {
+			if(this.status === 'fulfilled') {
+				arguments[0](this.msg)
+			} else if(this.status === 'rejected' && arguments[1]) {
+				arguments[1](this.msg)
+			}
+			return this;    //形成链式调用 
+		}
+		
+		promise.prototype.catch = function() {
+			if(this.status === 'rejected' && arguments[0]) {
+				arguments[0](this.msg)
+			}
+			return this;   //形成链式调用 
+		}
+		
+		//调用promise
+		var myPromise = new promise((resolve,reject)=>{
+			let randomNum = parseInt(Math.random()*100);
+			if(randomNum>=50){
+				resolve('success');
+			}else{
+				reject('error');
+			}
+		})
+		
+		console.log(myPromise);
+		myPromise.then((data)=>{
+			console.log(data);
+		},(err)=>{
+			console.log(err);
+		}).catch(err=>{
+			console.log(err);
+		})
+		
+		
+	</script>
+
+</html>

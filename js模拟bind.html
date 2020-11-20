@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+	</body>
+	<script>
+		Function.prototype.mockBind = function() {
+			// 保存原函数
+			var self = this,
+			    argArr = [...arguments],
+			    context = argArr.shift();
+			    
+			return function(){
+				return self.apply(context,argArr);
+			}
+		}
+        
+		function createObj(name,age){
+			this.name = name;
+			this.age = age;
+			return this;
+		}
+		//此处this，指向window
+		let obj1 = createObj('Tony',18);
+		console.log(obj1);
+		
+		//修改this指向，此处指向{}
+		let createObjMockBind = createObj.mockBind({},'Boy',20);
+		let obj2 = createObjMockBind();
+		console.log('mockBind',obj2)
+		
+		//修改this指向，此处指向{}
+		let createObjBind = createObj.bind({},'Boy',20);
+		let obj3 = createObjBind();
+		console.log('原生bind',obj3)
+		
+	</script>
+
+</html>
